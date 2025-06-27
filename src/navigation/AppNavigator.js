@@ -1,7 +1,13 @@
 import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from 'react-native';
+import { useTheme } from '../contexts/ThemeContext';
+import { useUser } from '../contexts/UserContext';
 
-// 화면 컴포넌트 import
+// 화면 컴포넌트들
+import LoadingScreen from '../components/common/LoadingScreen';
 import UserRegistrationScreen from '../screens/auth/UserRegistrationScreen';
 import MainScreen from '../screens/main/MainScreen';
 import ProjectsScreen from '../screens/main/ProjectsScreen';
@@ -10,78 +16,151 @@ import SettingsScreen from '../screens/settings/SettingsScreen';
 import NotificationSettingsScreen from '../screens/settings/NotificationSettingsScreen';
 import DisplaySettingsScreen from '../screens/settings/DisplaySettingsScreen';
 import ProfileEditScreen from '../screens/settings/ProfileEditScreen';
-import AdminDashboard from '../screens/admin/AdminDashboard';
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
-const AppNavigator = ({ initialRoute = 'UserRegistration' }) => {
+// 메인 탭 네비게이터
+const MainTabNavigator = () => {
+  const { theme, fontSize } = useTheme();
+  
   return (
-    <Stack.Navigator
-      initialRouteName={initialRoute}
+    <Tab.Navigator
       screenOptions={{
-        headerShown: false, // 헤더 숨김 (접근성을 위해 간단한 UI)
-        gestureEnabled: false, // 제스처 비활성화 (실수 방지)
-        animationEnabled: false, // 애니메이션 비활성화 (성능 및 접근성)
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: theme.surface,
+          borderTopColor: theme.border,
+          paddingBottom: 5,
+          paddingTop: 5,
+          height: 60
+        },
+        tabBarActiveTintColor: theme.accent,
+        tabBarInactiveTintColor: theme.secondaryText,
+        tabBarLabelStyle: {
+          fontSize: fontSize === 'large' ? 14 : fontSize === 'extraLarge' ? 16 : 12,
+          fontWeight: '600'
+        }
       }}
     >
-      {/* 인증/등록 화면 */}
-      <Stack.Screen 
-        name="UserRegistration" 
-        component={UserRegistrationScreen}
-        options={{ title: '농업 알리미 가입' }}
-      />
-      
-      {/* 메인 화면들 */}
-      <Stack.Screen 
-        name="Main" 
+      <Tab.Screen 
+        name="Home" 
         component={MainScreen}
-        options={{ title: '농업 알리미' }}
+        options={{
+          tabBarLabel: '홈',
+          tabBarIcon: ({ color, size }) => (
+            <Text style={{ color, fontSize: size }}>🏠</Text>
+          )
+        }}
       />
-      
-      <Stack.Screen 
+      <Tab.Screen 
         name="Projects" 
         component={ProjectsScreen}
-        options={{ title: '이달의 사업' }}
+        options={{
+          tabBarLabel: '사업',
+          tabBarIcon: ({ color, size }) => (
+            <Text style={{ color, fontSize: size }}>📋</Text>
+          )
+        }}
       />
-      
-      <Stack.Screen 
-        name="Notification" 
-        component={NotificationScreen}
-        options={{ title: '사업 안내' }}
-      />
-      
-      {/* 설정 화면들 */}
-      <Stack.Screen 
+      <Tab.Screen 
         name="Settings" 
         component={SettingsScreen}
-        options={{ title: '설정' }}
+        options={{
+          tabBarLabel: '설정',
+          tabBarIcon: ({ color, size }) => (
+            <Text style={{ color, fontSize: size }}>⚙️</Text>
+          )
+        }}
       />
-      
-      <Stack.Screen 
-        name="NotificationSettings" 
-        component={NotificationSettingsScreen}
-        options={{ title: '알림 설정' }}
-      />
-      
-      <Stack.Screen 
-        name="DisplaySettings" 
-        component={DisplaySettingsScreen}
-        options={{ title: '화면 설정' }}
-      />
-      
-      <Stack.Screen 
-        name="ProfileEdit" 
-        component={ProfileEditScreen}
-        options={{ title: '개인정보 수정' }}
-      />
-      
-      {/* 관리자 화면 */}
-      <Stack.Screen 
-        name="AdminDashboard" 
-        component={AdminDashboard}
-        options={{ title: '관리자 대시보드' }}
-      />
-    </Stack.Navigator>
+    </Tab.Navigator>
+  );
+};
+
+// 메인 스택 네비게이터
+const AppNavigator = () => {
+  const { user, isLoading } = useUser();
+  const { theme } = useTheme();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          cardStyle: { backgroundColor: theme.background }
+        }}
+      >
+        {!user ? (
+          // 사용자가 등록되지 않은 경우
+          <Stack.Screen 
+            name="UserRegistration" 
+            component={UserRegistrationScreen}
+            options={{ animationEnabled: false }}
+          />
+        ) : (
+          // 사용자가 등록된 경우
+          <>
+            <Stack.Screen 
+              name="MainTab" 
+              component={MainTabNavigator}
+              options={{ animationEnabled: false }}
+            />
+            <Stack.Screen 
+              name="Notification" 
+              component={NotificationScreen}
+              options={{
+                animationEnabled: true,
+                cardStyleInterpolator: ({ current }) => ({
+                  cardStyle: {
+                    opacity: current.progress
+                  }
+                })
+              }}
+            />
+            <Stack.Screen 
+              name="NotificationSettings" 
+              component={NotificationSettingsScreen}
+              options={{
+                animationEnabled: true,
+                cardStyleInterpolator: ({ current }) => ({
+                  cardStyle: {
+                    opacity: current.progress
+                  }
+                })
+              }}
+            />
+            <Stack.Screen 
+              name="DisplaySettings" 
+              component={DisplaySettingsScreen}
+              options={{
+                animationEnabled: true,
+                cardStyleInterpolator: ({ current }) => ({
+                  cardStyle: {
+                    opacity: current.progress
+                  }
+                })
+              }}
+            />
+            <Stack.Screen 
+              name="ProfileEdit" 
+              component={ProfileEditScreen}
+              options={{
+                animationEnabled: true,
+                cardStyleInterpolator: ({ current }) => ({
+                  cardStyle: {
+                    opacity: current.progress
+                  }
+                })
+              }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
