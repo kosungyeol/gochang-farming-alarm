@@ -111,137 +111,118 @@ const SettingsScreen = ({ navigation }) => {
           <Text style={styles.titleText}>⚙️ 설정</Text>
         </View>
 
-        {/* 현재 사용자 정보 */}
+        {/* 사용자 정보 요약 */}
         <View style={[styles.card, { marginBottom: 30 }]}>
-          <Text style={styles.subtitleText}>👤 현재 사용자</Text>
+          <Text style={styles.subtitleText}>👤 사용자 정보</Text>
           <View style={{ marginTop: 15 }}>
             <Text style={styles.bodyText}>
-              • 이름: {userName}{'\n'}
-              • 나이: {getUserAge()}세{'\n'}
-              • 업종: {getIndustryNames().join(', ')}{'\n'}
-              • 테마: {getThemeName(currentTheme)}{'\n'}
-              • 폰트: {getFontSizeName(fontSize)}
+              • 이름: {userName || '미설정'}{'\n'}
+              • 나이: {getUserAge() || '미설정'}세{'\n'}
+              • 관심분야: {getIndustryNames() || '미설정'}{'\n'}
+              • 화면모드: {getThemeName()}{'\n'}
+              • 글자크기: {getFontSizeName()}
             </Text>
           </View>
         </View>
 
-        {/* 개인정보 수정 */}
+        {/* 개인정보 관리 */}
         <TouchableOpacity
-          style={styles.card}
+          style={[styles.card, { marginBottom: 15 }]}
           onPress={handlePersonalInfo}
           accessibilityLabel="개인정보 수정"
-          accessibilityHint="이름, 생년월일, 업종 정보를 수정할 수 있습니다"
         >
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.subtitleText}>📝 개인정보 수정</Text>
-            <Text style={[styles.bodyText, { marginTop: 8 }]}>
-              이름, 생년월일, 업종 수정
-            </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View>
+              <Text style={styles.subtitleText}>📝 개인정보 수정</Text>
+              <Text style={styles.secondaryText}>이름, 나이, 관심분야 변경</Text>
+            </View>
+            <Text style={styles.subtitleText}>→</Text>
           </View>
         </TouchableOpacity>
 
         {/* 관심사업 관리 */}
         <TouchableOpacity
-          style={styles.card}
+          style={[styles.card, { marginBottom: 15 }]}
           onPress={handleInterestManagement}
           accessibilityLabel="관심사업 관리"
-          accessibilityHint="등록한 관심사업을 추가하거나 삭제할 수 있습니다"
         >
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.subtitleText}>⭐ 관심사업 관리</Text>
-            <Text style={[styles.bodyText, { marginTop: 8 }]}>
-              등록된 사업 추가/삭제
-            </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View>
+              <Text style={styles.subtitleText}>⭐ 관심사업 관리</Text>
+              <Text style={styles.secondaryText}>등록된 관심사업 확인 및 관리</Text>
+            </View>
+            <Text style={styles.subtitleText}>→</Text>
           </View>
         </TouchableOpacity>
 
         {/* 알림 설정 */}
         <TouchableOpacity
-          style={styles.card}
+          style={[styles.card, { marginBottom: 15 }]}
           onPress={handleNotificationSettings}
           accessibilityLabel="알림 설정"
-          accessibilityHint="푸시알림 및 시간 설정을 변경할 수 있습니다"
         >
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.subtitleText}>🔔 알림 설정</Text>
-            <Text style={[styles.bodyText, { marginTop: 8 }]}>
-              푸시알림 및 시간 설정
-            </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View>
+              <Text style={styles.subtitleText}>🔔 알림 설정</Text>
+              <Text style={styles.secondaryText}>알림 시간, 방식 설정</Text>
+            </View>
+            <Text style={styles.subtitleText}>→</Text>
           </View>
         </TouchableOpacity>
 
         {/* 화면 설정 */}
         <TouchableOpacity
-          style={styles.card}
+          style={[styles.card, { marginBottom: 15 }]}
           onPress={handleDisplaySettings}
           accessibilityLabel="화면 설정"
-          accessibilityHint="폰트 크기와 색상 테마를 변경할 수 있습니다"
         >
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.subtitleText}>🎨 화면 설정</Text>
-            <Text style={[styles.bodyText, { marginTop: 8 }]}>
-              폰트 크기, 색상 테마
-            </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View>
+              <Text style={styles.subtitleText}>🎨 화면 설정</Text>
+              <Text style={styles.secondaryText}>글자크기, 화면모드 변경</Text>
+            </View>
+            <Text style={styles.subtitleText}>→</Text>
           </View>
         </TouchableOpacity>
 
         {/* 앱 정보 */}
         <TouchableOpacity
-          style={styles.card}
+          style={[styles.card, { marginBottom: 15 }]}
           onPress={handleAppInfo}
           accessibilityLabel="앱 정보"
-          accessibilityHint="앱 버전정보와 이용약관을 확인할 수 있습니다"
         >
-          <View style={{ alignItems: 'center' }}>
-            <Text style={styles.subtitleText}>ℹ️ 앱 정보</Text>
-            <Text style={[styles.bodyText, { marginTop: 8 }]}>
-              버전정보, 이용약관
-            </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View>
+              <Text style={styles.subtitleText}>ℹ️ 앱 정보</Text>
+              <Text style={styles.secondaryText}>버전, 개발자 정보</Text>
+            </View>
+            <Text style={styles.subtitleText}>→</Text>
           </View>
         </TouchableOpacity>
 
         {/* 도움말 */}
         <View style={[styles.card, { marginTop: 30, backgroundColor: theme.surface }]}>
-          <Text style={styles.subtitleText}>💡 설정 도움말</Text>
+          <Text style={styles.subtitleText}>💡 사용 도움말</Text>
           <Text style={styles.secondaryText}>
-            📝 개인정보는 언제든 수정할 수 있어요{'\n'}
-            ⭐ 관심사업을 등록하면 자동으로 알림을 받아요{'\n'}
-            🔔 알림 시간을 활동 시간에 맞춰 설정하세요{'\n'}
-            🎨 화면이 잘 안 보이면 폰트를 크게 설정하세요
+            • 개인정보를 정확히 입력하면 맞춤 알림을 받을 수 있어요{'\n'}
+            • 관심사업을 등록하면 신청 마감일을 미리 알려드려요{'\n'}
+            • 화면이 잘 안 보이면 글자크기를 조정해보세요{'\n'}
+            • 야간에는 어두운 모드를 사용해보세요
           </Text>
         </View>
 
         {/* 로그아웃 버튼 */}
         <TouchableOpacity
-          style={[
-            styles.secondaryButton,
-            { 
-              marginTop: 30,
-              borderColor: theme.error,
-              backgroundColor: theme.surface
-            }
-          ]}
+          style={[styles.secondaryButton, { 
+            marginTop: 40,
+            backgroundColor: theme.error,
+            borderColor: theme.error
+          }]}
           onPress={handleLogout}
           accessibilityLabel="로그아웃"
-          accessibilityHint="앱에서 로그아웃하고 초기화면으로 돌아갑니다"
         >
-          <Text style={[styles.buttonText, { color: theme.error }]}>
-            🚪 로그아웃
-          </Text>
+          <Text style={[styles.buttonText, { color: '#FFFFFF' }]}>🚪 로그아웃</Text>
         </TouchableOpacity>
-
-        {/* 문의처 */}
-        <View style={[styles.card, { marginTop: 20 }]}>
-          <Text style={styles.subtitleText}>📞 문의 및 지원</Text>
-          <View style={{ marginTop: 15 }}>
-            <Text style={styles.bodyText}>
-              • 고창군청 농업과: 063-560-2000{'\n'}
-              • 앱 사용 문의: 읍면사무소{'\n'}
-              • 기술 지원: GitHub Issues{'\n'}
-              • 업무시간: 평일 09:00~18:00
-            </Text>
-          </View>
-        </View>
 
         {/* 하단 여백 */}
         <View style={{ height: 40 }} />
